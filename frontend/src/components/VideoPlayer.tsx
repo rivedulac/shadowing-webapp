@@ -23,6 +23,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [repeatIndex, setRepeatIndex] = useState<number>(0);
   const [filteredCaptions, setFilteredCaptions] = useState<Caption[]>([]);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const handlePlay = () => {
     videoRef.current?.play();
@@ -40,21 +41,31 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     if (!video || filteredCaptions.length === 0) return;
 
     const handleTimeUpdate = () => {
+      if (!video || isWaiting) return;
+
       const cap = filteredCaptions[currentIndex];
+
       if (video.currentTime > cap.end) {
-        if (repeatIndex + 1 < repeatCount) {
-          video.currentTime = cap.start;
-          setRepeatIndex(repeatIndex + 1);
-        } else {
-          const nextIndex = currentIndex + 1;
-          if (nextIndex < filteredCaptions.length) {
-            setCurrentIndex(nextIndex);
-            setRepeatIndex(0);
-            video.currentTime = filteredCaptions[nextIndex].start;
+        setIsWaiting(true);
+        video.pause();
+
+        setTimeout(() => {
+          if (repeatIndex + 1 < repeatCount) {
+            video.currentTime = cap.start;
+            setRepeatIndex(repeatIndex + 1);
           } else {
-            video.pause();
+            const nextIndex = currentIndex + 1;
+            if (nextIndex < filteredCaptions.length) {
+              setCurrentIndex(nextIndex);
+              setRepeatIndex(0);
+              video.currentTime = filteredCaptions[nextIndex].start;
+            } else {
+              video.pause();
+            }
           }
-        }
+          setIsWaiting(false);
+          video.play();
+        }, (cap.end - cap.start) * 1000); // 쉐도잉용 pause 시간 = 문장 길이만큼
       }
     };
 
