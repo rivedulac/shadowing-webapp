@@ -8,7 +8,7 @@ import hashlib
 
 from fastapi import Body, FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from whisper_infer import transcribe_with_whisper
+from src.whisper_infer import transcribe_with_whisper
 
 app = FastAPI()
 
