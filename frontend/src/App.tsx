@@ -3,7 +3,8 @@ import VideoPlayer from "./components/VideoPlayer";
 import {
   uploadVideo,
   transcribeYoutube,
-  extractYoutubeCaptionsOnly,
+  extractYoutubeCaptionsWithDuration,
+  smartExtractCaptions,
 } from "./api";
 import "./App.css";
 import YoutubePlayer from "./components/YoutubePlayer";
@@ -17,9 +18,9 @@ const App = () => {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [extractionMethod, setExtractionMethod] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [qualityPreference, setQualityPreference] = useState<"fast" | "high">(
-    "fast"
-  );
+  const [qualityPreference, setQualityPreference] = useState<
+    "fast" | "high" | "smart"
+  >("fast");
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,10 +57,24 @@ const App = () => {
     try {
       if (qualityPreference === "fast") {
         // First try to extract captions only (faster)
-        const result = await extractYoutubeCaptionsOnly(youtubeLink);
+        const result = await extractYoutubeCaptionsWithDuration(
+          youtubeLink,
+          minDuration
+        );
         setCaptions(result.captions);
         setExtractionMethod(result.method);
         setVideoUrl(youtubeLink);
+      } else if (qualityPreference === "smart") {
+        // Smart extraction: tries YouTube first, falls back to Whisper if quality is poor
+        const result = await smartExtractCaptions(youtubeLink, minDuration);
+        setCaptions(result.captions);
+        setExtractionMethod(result.method);
+        setVideoUrl(youtubeLink);
+
+        // Show quality assessment info if available
+        if (result.quality_assessment) {
+          console.log("Quality assessment:", result.quality_assessment);
+        }
       } else {
         // Go straight to high-quality transcription
         const result = await transcribeYoutube(youtubeLink);
@@ -137,12 +152,21 @@ const App = () => {
               id="qualityPreference"
               value={qualityPreference}
               onChange={(e) =>
-                setQualityPreference(e.target.value as "fast" | "high")
+                setQualityPreference(
+                  e.target.value as "fast" | "high" | "smart"
+                )
               }
               style={{ marginLeft: "0.5rem" }}
             >
-              <option value="fast">Fast (YouTube Captions)</option>
-              <option value="high">High Quality (Whisper)</option>
+              <option value="fast">
+                Fast (YouTube Captions - Lower Quality)
+              </option>
+              <option value="smart">
+                Smart (Try YouTube, Fallback to Whisper)
+              </option>
+              <option value="high">
+                High Quality (Whisper - Best Quality)
+              </option>
             </select>
           </div>
         </div>
