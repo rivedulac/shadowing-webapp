@@ -11,6 +11,7 @@ interface YoutubePlayerProps {
   captions: Caption[];
   repeatCount: number;
   minDuration?: number;
+  shadowingTime?: number; // ex: 1.5 (multiplier for pause duration)
 }
 
 const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
@@ -18,6 +19,7 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   captions,
   repeatCount,
   minDuration = 0,
+  shadowingTime = 1.0,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [repeatIndex, setRepeatIndex] = useState(0);
@@ -136,7 +138,7 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
             }
             setIsWaiting(false);
             player.playVideo();
-          }, (cap.end - cap.start) * 1000);
+          }, (cap.end - cap.start) * shadowingTime * 1000);
         }
       } catch (error) {
         console.error("Error in player control loop:", error);
@@ -151,6 +153,7 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
     filteredCaptions,
     isWaiting,
     repeatCount,
+    shadowingTime,
   ]);
 
   return (
@@ -169,7 +172,8 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
         {filteredCaptions[currentIndex]?.text || "End"}
         <br />
         <span>
-          Repeat: {repeatIndex + 1} / {repeatCount}
+          Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
+          {shadowingTime}x
         </span>
       </p>
     </div>

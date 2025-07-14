@@ -11,6 +11,7 @@ interface VideoPlayerProps {
   captions: Caption[];
   repeatCount: number; // ex: 3
   minDuration?: number; // ex: 2.5 (filter short utterances)
+  shadowingTime?: number; // ex: 1.5 (multiplier for pause duration)
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -18,6 +19,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   captions,
   repeatCount,
   minDuration = 0,
+  shadowingTime = 1.0,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -65,7 +67,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           }
           setIsWaiting(false);
           video.play();
-        }, (cap.end - cap.start) * 1000); // 쉐도잉용 pause 시간 = 문장 길이만큼
+        }, (cap.end - cap.start) * shadowingTime * 1000); // 쉐도잉용 pause 시간 = 문장 길이 * shadowingTime
       }
     };
 
@@ -75,7 +77,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [currentIndex, repeatIndex, filteredCaptions, repeatCount]);
+  }, [currentIndex, repeatIndex, filteredCaptions, repeatCount, shadowingTime]);
 
   return (
     <div>
@@ -93,7 +95,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         {filteredCaptions[currentIndex]?.text || "End"}
         <br />
         <span>
-          Repeat: {repeatIndex + 1} / {repeatCount}
+          Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
+          {shadowingTime}x
         </span>
       </div>
     </div>

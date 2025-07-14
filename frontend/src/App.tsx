@@ -15,6 +15,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [repeatCount, setRepeatCount] = useState(3);
   const [minDuration, setMinDuration] = useState(2.5);
+  const [shadowingTime, setShadowingTime] = useState(1.0);
   const [youtubeLink, setYoutubeLink] = useState("");
   const [extractionMethod, setExtractionMethod] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -118,6 +119,11 @@ const App = () => {
 
       <div style={{ marginBottom: "2rem" }}>
         <h3>Settings</h3>
+        <p style={{ fontSize: "0.9em", color: "#666", marginBottom: "1rem" }}>
+          💡 <strong>Shadowing Time:</strong> Controls how long the video pauses
+          after each caption for you to practice speaking. Higher values give
+          you more time to catch up with the audio.
+        </p>
         <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
           <div>
             <label htmlFor="repeatCount">Repeat Count: </label>
@@ -145,6 +151,26 @@ const App = () => {
               }
               style={{ width: "80px", marginLeft: "0.5rem" }}
             />
+          </div>
+          <div>
+            <label htmlFor="shadowingTime">Shadowing Time (multiplier): </label>
+            <input
+              id="shadowingTime"
+              type="number"
+              min="0.5"
+              max="3.0"
+              step="0.1"
+              value={shadowingTime}
+              onChange={(e) =>
+                setShadowingTime(parseFloat(e.target.value) || 1.0)
+              }
+              style={{ width: "80px", marginLeft: "0.5rem" }}
+            />
+            <span
+              style={{ fontSize: "0.8em", color: "#666", marginLeft: "0.5rem" }}
+            >
+              (1.0x = normal, 1.5x = 50% more time)
+            </span>
           </div>
           <div>
             <label htmlFor="qualityPreference">Quality: </label>
@@ -252,6 +278,7 @@ const App = () => {
             captions={captions}
             repeatCount={repeatCount}
             minDuration={minDuration}
+            shadowingTime={shadowingTime}
           />
         ) : (
           <VideoPlayer
@@ -259,6 +286,7 @@ const App = () => {
             captions={captions}
             repeatCount={repeatCount}
             minDuration={minDuration}
+            shadowingTime={shadowingTime}
           />
         ))}
     </div>
