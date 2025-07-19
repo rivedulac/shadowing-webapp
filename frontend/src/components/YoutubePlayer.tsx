@@ -162,11 +162,7 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
       {playerError && (
         <p style={{ color: "red", marginTop: "1rem" }}>❌ {playerError}</p>
       )}
-      {videoId && !playerError && (
-        <p style={{ color: "blue", marginTop: "1rem", fontSize: "0.9em" }}>
-          📺 Video ID: {videoId}
-        </p>
-      )}
+
       <div style={{ marginTop: "1rem" }}>
         <strong style={{ fontSize: "1.2rem" }}>Now Playing:</strong>
         <div

@@ -26,6 +26,12 @@ const App = () => {
     "fast" | "high" | "smart"
   >("fast");
 
+  // Extract video ID from YouTube URL
+  const extractVideoId = (url: string) => {
+    const match = url.match(/(?:\/|v=)([a-zA-Z0-9_-]{11})/);
+    return match ? match[1] : null;
+  };
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -171,6 +177,11 @@ const App = () => {
         error={error}
         extractionMethod={extractionMethod}
         captionsLength={captions.length}
+        videoId={
+          videoUrl && videoUrl.includes("youtu")
+            ? extractVideoId(videoUrl)
+            : null
+        }
       />
     </div>
   );
