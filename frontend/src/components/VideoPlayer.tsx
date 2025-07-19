@@ -108,7 +108,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
             {filteredCaptions[currentIndex]?.text || "End"}
           </div>
         </div>
-        <div style={{ marginTop: "1rem", fontSize: "1rem" }}>
+        <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>
           <span>
             Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
             {shadowingTime}x

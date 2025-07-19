@@ -143,6 +143,7 @@ const App = () => {
         setShadowingTime={setShadowingTime}
         qualityPreference={qualityPreference}
         setQualityPreference={setQualityPreference}
+        captionsExtracted={captions.length > 0}
       />
 
       <InputMethods
@@ -150,6 +151,7 @@ const App = () => {
         setYoutubeLink={setYoutubeLink}
         handleFileChange={handleFileChange}
         handleYoutubeSubmit={handleYoutubeSubmit}
+        captionsExtracted={captions.length > 0}
       />
 
       {videoUrl &&

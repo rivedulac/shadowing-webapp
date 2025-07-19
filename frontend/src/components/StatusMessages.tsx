@@ -18,6 +18,7 @@ const StatusMessages: React.FC<StatusMessagesProps> = ({
   const [isExpanded, setIsExpanded] = useState(true);
   return (
     <>
+      <div style={{ marginTop: "1rem" }}></div>
       {loading && (
         <div
           style={{
