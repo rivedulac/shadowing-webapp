@@ -91,13 +91,29 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       />
       <div style={{ marginTop: "1rem" }}>
         <button onClick={handlePlay}>Play</button>
-        <strong>Now Playing:</strong>{" "}
-        {filteredCaptions[currentIndex]?.text || "End"}
-        <br />
-        <span>
-          Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
-          {shadowingTime}x
-        </span>
+        <div style={{ marginTop: "1rem" }}>
+          <strong style={{ fontSize: "1.2rem" }}>Now Playing:</strong>
+          <div
+            style={{
+              fontSize: "1.8rem",
+              fontWeight: "600",
+              color: "#2c3e50",
+              marginTop: "0.5rem",
+              padding: "1rem",
+              background: "#f8f9fa",
+              borderRadius: "8px",
+              border: "2px solid #e9ecef",
+            }}
+          >
+            {filteredCaptions[currentIndex]?.text || "End"}
+          </div>
+        </div>
+        <div style={{ marginTop: "1rem", fontSize: "1rem" }}>
+          <span>
+            Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
+            {shadowingTime}x
+          </span>
+        </div>
       </div>
     </div>
   );

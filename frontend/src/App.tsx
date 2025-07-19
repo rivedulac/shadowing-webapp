@@ -3,6 +3,7 @@ import VideoPlayer from "./components/VideoPlayer";
 import YoutubePlayer from "./components/YoutubePlayer";
 import Parameters from "./components/Parameters";
 import InputMethods from "./components/InputMethods";
+import StatusMessages from "./components/StatusMessages";
 import {
   uploadVideo,
   transcribeYoutube,
@@ -145,84 +146,6 @@ const App = () => {
         handleYoutubeSubmit={handleYoutubeSubmit}
       />
 
-      {loading && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "2rem",
-            background: "#e3f2fd",
-            borderRadius: "12px",
-            marginBottom: "2rem",
-          }}
-        >
-          <p style={{ fontSize: "1.1rem", color: "#1976d2", margin: "0" }}>
-            ⏳ Extracting captions...
-          </p>
-        </div>
-      )}
-
-      {error && (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "2rem",
-            background: "#ffebee",
-            borderRadius: "12px",
-            marginBottom: "2rem",
-          }}
-        >
-          <p style={{ fontSize: "1.1rem", color: "#d32f2f", margin: "0" }}>
-            ❌ Error: {error}
-          </p>
-        </div>
-      )}
-
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          marginBottom: "2rem",
-          flexWrap: "wrap",
-        }}
-      >
-        {extractionMethod && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "1rem 2rem",
-              background: "#e8f5e8",
-              borderRadius: "12px",
-              flex: "1",
-              minWidth: "250px",
-            }}
-          >
-            <p style={{ fontSize: "1rem", color: "#2e7d32", margin: "0" }}>
-              ✅ Method:{" "}
-              {extractionMethod === "youtube_captions"
-                ? "YouTube Captions (Fast)"
-                : "Whisper Transcription (Slow)"}
-            </p>
-          </div>
-        )}
-
-        {captions.length > 0 && (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "1rem 2rem",
-              background: "#e3f2fd",
-              borderRadius: "12px",
-              flex: "1",
-              minWidth: "250px",
-            }}
-          >
-            <p style={{ fontSize: "1rem", color: "#1976d2", margin: "0" }}>
-              📝 Captions extracted: {captions.length} segments
-            </p>
-          </div>
-        )}
-      </div>
-
       {videoUrl &&
         captions.length > 0 &&
         (videoUrl.includes("youtu") ? (
@@ -242,6 +165,13 @@ const App = () => {
             shadowingTime={shadowingTime}
           />
         ))}
+
+      <StatusMessages
+        loading={loading}
+        error={error}
+        extractionMethod={extractionMethod}
+        captionsLength={captions.length}
+      />
     </div>
   );
 };
