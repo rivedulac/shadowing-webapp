@@ -154,25 +154,27 @@ const App = () => {
         captionsExtracted={captions.length > 0}
       />
 
-      {videoUrl &&
-        captions.length > 0 &&
-        (videoUrl.includes("youtu") ? (
-          <YoutubePlayer
-            youtubeUrl={videoUrl}
-            captions={captions}
-            repeatCount={repeatCount}
-            minDuration={minDuration}
-            shadowingTime={shadowingTime}
-          />
-        ) : (
-          <VideoPlayer
-            videoUrl={videoUrl}
-            captions={captions}
-            repeatCount={repeatCount}
-            minDuration={minDuration}
-            shadowingTime={shadowingTime}
-          />
-        ))}
+      <div style={{ textAlign: "center" }}>
+        {videoUrl &&
+          captions.length > 0 &&
+          (videoUrl.includes("youtu") ? (
+            <YoutubePlayer
+              youtubeUrl={videoUrl}
+              captions={captions}
+              repeatCount={repeatCount}
+              minDuration={minDuration}
+              shadowingTime={shadowingTime}
+            />
+          ) : (
+            <VideoPlayer
+              videoUrl={videoUrl}
+              captions={captions}
+              repeatCount={repeatCount}
+              minDuration={minDuration}
+              shadowingTime={shadowingTime}
+            />
+          ))}
+      </div>
 
       <StatusMessages
         loading={loading}
