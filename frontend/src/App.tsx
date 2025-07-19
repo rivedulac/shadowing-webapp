@@ -242,34 +242,6 @@ const App = () => {
           📝 Captions extracted: {captions.length} segments
         </p>
       )}
-
-      {/* Debug information */}
-      <div
-        style={{
-          marginTop: "1rem",
-          padding: "1rem",
-          backgroundColor: "#f0f0f0",
-          fontSize: "0.8em",
-        }}
-      >
-        <h4>Debug Info:</h4>
-        <p>videoUrl: {videoUrl || "null"}</p>
-        <p>captions.length: {captions.length}</p>
-        <p>
-          videoUrl.includes('youtu'):{" "}
-          {videoUrl ? videoUrl.includes("youtu") : "N/A"}
-        </p>
-        <p>
-          Should show player: {videoUrl && captions.length > 0 ? "YES" : "NO"}
-        </p>
-        <p>
-          Should show YouTube player:{" "}
-          {videoUrl && captions.length > 0 && videoUrl.includes("youtu")
-            ? "YES"
-            : "NO"}
-        </p>
-      </div>
-
       {videoUrl &&
         captions.length > 0 &&
         (videoUrl.includes("youtu") ? (
