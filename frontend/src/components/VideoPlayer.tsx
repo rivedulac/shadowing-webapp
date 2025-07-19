@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import CaptionControls from "./CaptionControls";
 
 interface Caption {
   start: number; // in seconds
@@ -12,6 +13,7 @@ interface VideoPlayerProps {
   repeatCount: number; // ex: 3
   minDuration?: number; // ex: 2.5 (filter short utterances)
   shadowingTime?: number; // ex: 1.5 (multiplier for pause duration)
+  setShadowingTime?: (value: number) => void; // Function to update shadowing time
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -20,6 +22,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   repeatCount,
   minDuration = 0,
   shadowingTime = 1.0,
+  setShadowingTime,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -89,32 +92,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         autoPlay
         muted
       />
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={handlePlay}>Play</button>
-        <div style={{ marginTop: "1rem" }}>
-          <strong style={{ fontSize: "1.2rem" }}>Now Playing:</strong>
-          <div
-            style={{
-              fontSize: "1.8rem",
-              fontWeight: "600",
-              color: "#2c3e50",
-              marginTop: "0.5rem",
-              padding: "1rem",
-              background: "#f8f9fa",
-              borderRadius: "8px",
-              border: "2px solid #e9ecef",
-            }}
-          >
-            {filteredCaptions[currentIndex]?.text || "End"}
-          </div>
-        </div>
-        <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>
-          <span>
-            Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
-            {shadowingTime}x
-          </span>
-        </div>
-      </div>
+      <CaptionControls
+        currentCaption={filteredCaptions[currentIndex]}
+        currentIndex={currentIndex}
+        repeatIndex={repeatIndex}
+        repeatCount={repeatCount}
+        shadowingTime={shadowingTime}
+        setShadowingTime={setShadowingTime}
+        onPlay={handlePlay}
+        isEnd={currentIndex >= filteredCaptions.length}
+      />
     </div>
   );
 };

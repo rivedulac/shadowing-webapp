@@ -164,6 +164,7 @@ const App = () => {
               repeatCount={repeatCount}
               minDuration={minDuration}
               shadowingTime={shadowingTime}
+              setShadowingTime={setShadowingTime}
             />
           ) : (
             <VideoPlayer
@@ -172,6 +173,7 @@ const App = () => {
               repeatCount={repeatCount}
               minDuration={minDuration}
               shadowingTime={shadowingTime}
+              setShadowingTime={setShadowingTime}
             />
           ))}
       </div>

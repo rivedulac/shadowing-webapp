@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import CaptionControls from "./CaptionControls";
 
 interface Caption {
   start: number;
@@ -12,6 +13,7 @@ interface YoutubePlayerProps {
   repeatCount: number;
   minDuration?: number;
   shadowingTime?: number; // ex: 1.5 (multiplier for pause duration)
+  setShadowingTime?: (value: number) => void; // Function to update shadowing time
 }
 
 const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
@@ -20,6 +22,7 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
   repeatCount,
   minDuration = 0,
   shadowingTime = 1.0,
+  setShadowingTime,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [repeatIndex, setRepeatIndex] = useState(0);
@@ -163,29 +166,15 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
         <p style={{ color: "red", marginTop: "1rem" }}>❌ {playerError}</p>
       )}
 
-      <div style={{ marginTop: "1rem" }}>
-        <strong style={{ fontSize: "1.2rem" }}>Now Playing:</strong>
-        <div
-          style={{
-            fontSize: "1.8rem",
-            fontWeight: "600",
-            color: "#2c3e50",
-            marginTop: "0.5rem",
-            padding: "1rem",
-            background: "#f8f9fa",
-            borderRadius: "8px",
-            border: "2px solid #e9ecef",
-          }}
-        >
-          {filteredCaptions[currentIndex]?.text || "End"}
-        </div>
-        <div style={{ marginTop: "1rem", fontSize: "1.5rem" }}>
-          <span>
-            Repeat: {repeatIndex + 1} / {repeatCount} | Shadowing Time:{" "}
-            {shadowingTime}x
-          </span>
-        </div>
-      </div>
+      <CaptionControls
+        currentCaption={filteredCaptions[currentIndex]}
+        currentIndex={currentIndex}
+        repeatIndex={repeatIndex}
+        repeatCount={repeatCount}
+        shadowingTime={shadowingTime}
+        setShadowingTime={setShadowingTime}
+        isEnd={currentIndex >= filteredCaptions.length}
+      />
     </div>
   );
 };
