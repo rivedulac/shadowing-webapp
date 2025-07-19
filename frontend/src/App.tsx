@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import VideoPlayer from "./components/VideoPlayer";
+import YoutubePlayer from "./components/YoutubePlayer";
+import Parameters from "./components/Parameters";
 import {
   uploadVideo,
   transcribeYoutube,
@@ -7,7 +9,6 @@ import {
   smartExtractCaptions,
 } from "./api";
 import "./App.css";
-import YoutubePlayer from "./components/YoutubePlayer";
 
 const App = () => {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -114,134 +115,201 @@ const App = () => {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>🎧 Shadowing Practice</h2>
+    <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
+      <h2
+        style={{
+          fontSize: "2.5rem",
+          fontWeight: "700",
+          color: "#2c3e50",
+          marginBottom: "2rem",
+          textAlign: "center",
+        }}
+      >
+        🎧 Shadowing Practice
+      </h2>
 
-      <div style={{ marginBottom: "2rem" }}>
-        <h3>Settings</h3>
-        <p style={{ fontSize: "0.9em", color: "#666", marginBottom: "1rem" }}>
-          💡 <strong>Shadowing Time:</strong> Controls how long the video pauses
-          after each caption for you to practice speaking. Higher values give
-          you more time to catch up with the audio.
-        </p>
-        <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
-          <div>
-            <label htmlFor="repeatCount">Repeat Count: </label>
-            <input
-              id="repeatCount"
-              type="number"
-              min="1"
-              max="10"
-              value={repeatCount}
-              onChange={(e) => setRepeatCount(parseInt(e.target.value) || 1)}
-              style={{ width: "60px", marginLeft: "0.5rem" }}
-            />
-          </div>
-          <div>
-            <label htmlFor="minDuration">Minimum Duration (seconds): </label>
-            <input
-              id="minDuration"
-              type="number"
-              min="0.5"
-              max="10"
-              step="0.5"
-              value={minDuration}
-              onChange={(e) =>
-                setMinDuration(parseFloat(e.target.value) || 0.5)
-              }
-              style={{ width: "80px", marginLeft: "0.5rem" }}
-            />
-          </div>
-          <div>
-            <label htmlFor="shadowingTime">Shadowing Time (multiplier): </label>
-            <input
-              id="shadowingTime"
-              type="number"
-              min="0.5"
-              max="3.0"
-              step="0.1"
-              value={shadowingTime}
-              onChange={(e) =>
-                setShadowingTime(parseFloat(e.target.value) || 1.0)
-              }
-              style={{ width: "80px", marginLeft: "0.5rem" }}
-            />
-            <span
-              style={{ fontSize: "0.8em", color: "#666", marginLeft: "0.5rem" }}
-            >
-              (1.0x = normal, 1.5x = 50% more time)
-            </span>
-          </div>
-          <div>
-            <label htmlFor="qualityPreference">Quality: </label>
-            <select
-              id="qualityPreference"
-              value={qualityPreference}
-              onChange={(e) =>
-                setQualityPreference(
-                  e.target.value as "fast" | "high" | "smart"
-                )
-              }
-              style={{ marginLeft: "0.5rem" }}
-            >
-              <option value="fast">
-                Fast (YouTube Captions - Lower Quality)
-              </option>
-              <option value="smart">
-                Smart (Try YouTube, Fallback to Whisper)
-              </option>
-              <option value="high">
-                High Quality (Whisper - Best Quality)
-              </option>
-            </select>
-          </div>
+      <Parameters
+        repeatCount={repeatCount}
+        setRepeatCount={setRepeatCount}
+        shadowingTime={shadowingTime}
+        setShadowingTime={setShadowingTime}
+        qualityPreference={qualityPreference}
+        setQualityPreference={setQualityPreference}
+      />
+
+      <div
+        style={{
+          background: "#f8f9fa",
+          borderRadius: "12px",
+          padding: "2rem",
+          marginBottom: "2rem",
+          border: "1px solid #e9ecef",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "1.3rem",
+            fontWeight: "600",
+            marginBottom: "1rem",
+            color: "#495057",
+          }}
+        >
+          📁 Upload Local Video
+        </h3>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1rem",
+          }}
+        >
+          <input
+            type="file"
+            accept="video/mp4,video/webm"
+            onChange={handleFileChange}
+            style={{
+              flex: "1",
+              padding: "0.75rem",
+              borderRadius: "8px",
+              border: "2px dashed #dee2e6",
+              background: "white",
+              cursor: "pointer",
+            }}
+          />
         </div>
       </div>
 
-      <div>
-        <label>로컬 영상 파일 업로드:</label>
-        <br />
-        <input
-          type="file"
-          accept="video/mp4,video/webm"
-          onChange={handleFileChange}
-        />
+      <div
+        style={{
+          background: "#f8f9fa",
+          borderRadius: "12px",
+          padding: "2rem",
+          marginBottom: "2rem",
+          border: "1px solid #e9ecef",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "1.3rem",
+            fontWeight: "600",
+            marginBottom: "1rem",
+            color: "#495057",
+          }}
+        >
+          📺 YouTube Video
+        </h3>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            alignItems: "center",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="https://youtu.be/..."
+            value={youtubeLink}
+            onChange={(e) => setYoutubeLink(e.target.value)}
+            style={{
+              flex: "1",
+              padding: "0.75rem",
+              borderRadius: "8px",
+              border: "1px solid #dee2e6",
+              fontSize: "1rem",
+            }}
+          />
+          <button
+            onClick={handleYoutubeSubmit}
+            style={{
+              padding: "0.75rem 1.5rem",
+              borderRadius: "8px",
+              border: "none",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              color: "white",
+              fontSize: "1rem",
+              fontWeight: "600",
+              cursor: "pointer",
+              transition: "transform 0.2s ease",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.transform = "translateY(-2px)")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.transform = "translateY(0)")
+            }
+          >
+            Extract Captions
+          </button>
+        </div>
       </div>
 
-      <br />
-      <hr />
-      <br />
+      {loading && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "2rem",
+            background: "#e3f2fd",
+            borderRadius: "12px",
+            marginBottom: "2rem",
+          }}
+        >
+          <p style={{ fontSize: "1.1rem", color: "#1976d2", margin: "0" }}>
+            ⏳ Extracting captions...
+          </p>
+        </div>
+      )}
 
-      <div>
-        <label>YouTube 링크:</label>
-        <br />
-        <input
-          type="text"
-          placeholder="https://youtu.be/..."
-          value={youtubeLink}
-          onChange={(e) => setYoutubeLink(e.target.value)}
-          style={{ width: "60%" }}
-        />
-        <button onClick={handleYoutubeSubmit}>Extract Captions</button>
-      </div>
+      {error && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "2rem",
+            background: "#ffebee",
+            borderRadius: "12px",
+            marginBottom: "2rem",
+          }}
+        >
+          <p style={{ fontSize: "1.1rem", color: "#d32f2f", margin: "0" }}>
+            ❌ Error: {error}
+          </p>
+        </div>
+      )}
 
-      <br />
-      <br />
-      {loading && <p>⏳ Extracting captions...</p>}
-      {error && <p style={{ color: "red" }}>❌ Error: {error}</p>}
       {extractionMethod && (
-        <p style={{ color: "green", fontSize: "0.9em" }}>
-          ✅ Method:{" "}
-          {extractionMethod === "youtube_captions"
-            ? "YouTube Captions (Fast)"
-            : "Whisper Transcription (Slow)"}
-        </p>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "1rem 2rem",
+            background: "#e8f5e8",
+            borderRadius: "12px",
+            marginBottom: "2rem",
+          }}
+        >
+          <p style={{ fontSize: "1rem", color: "#2e7d32", margin: "0" }}>
+            ✅ Method:{" "}
+            {extractionMethod === "youtube_captions"
+              ? "YouTube Captions (Fast)"
+              : "Whisper Transcription (Slow)"}
+          </p>
+        </div>
       )}
+
       {captions.length > 0 && (
-        <p style={{ color: "blue", fontSize: "0.9em" }}>
-          📝 Captions extracted: {captions.length} segments
-        </p>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "1rem 2rem",
+            background: "#e3f2fd",
+            borderRadius: "12px",
+            marginBottom: "2rem",
+          }}
+        >
+          <p style={{ fontSize: "1rem", color: "#1976d2", margin: "0" }}>
+            📝 Captions extracted: {captions.length} segments
+          </p>
+        </div>
       )}
+
       {videoUrl &&
         captions.length > 0 &&
         (videoUrl.includes("youtu") ? (
